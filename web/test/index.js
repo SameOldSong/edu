@@ -8,6 +8,7 @@ import C from "../../../../shared/lib/constants";
 
 export default (programs, tests) => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
         if (!req.params || !req.params.programId || !programs[req.params.programId] || !req.params.moduleId) {
             rep.callNotFound();
             return rep.code(204);
@@ -21,7 +22,7 @@ export default (programs, tests) => ({
         const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
-            return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
+            return response.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
         }
         site.setAuth(auth);
         const testData = tests[`${req.params.programId}_${req.params.moduleId}_${req.params.testId}`];
@@ -166,7 +167,7 @@ export default (programs, tests) => ({
                     ...await site.getGlobals(),
                 }
             });
-            return rep.sendHTML(rep, render);
+            return response.sendHTML(rep, render);
         } catch (e) {
             return Promise.reject(e);
         }
