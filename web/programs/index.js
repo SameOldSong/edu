@@ -5,10 +5,10 @@ export default (programs) => ({
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, this, req, rep);
         const site = new req.ZoiaSite(req, "edu", this.mongo.db);
-        const response = new this.Response(req, rep);
+        const response = new this.Response(req, rep, site);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
-            return response.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
+            return response.redirectToLogin(req.zoiaModulesConfig["edu"].routes.admin);
         }
         site.setAuth(auth);
         try {
@@ -30,7 +30,7 @@ export default (programs) => ({
                     ...await site.getGlobals(),
                 }
             });
-            return response.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
             return Promise.reject(e);
         }

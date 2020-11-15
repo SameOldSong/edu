@@ -17,12 +17,12 @@ export default () => ({
         const response = new this.Response(req, rep);
         const log = new this.LoggerHelpers(req, this);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
-            response.unauthorizedError(rep);
+            response.unauthorizedError();
             return;
         }
         const testData = tests[`${req.body.program}_${req.body.module}_${req.body.test}`];
         if (!testData) {
-            response.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: "Could not find test data",
                 errorKeyword: "testNotFound",
@@ -37,7 +37,7 @@ export default () => ({
                 _id: testSession
             });
             if (!sessionDb || !sessionDb.questions || !sessionDb.questions.length) {
-                response.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Could not find test session",
                     errorKeyword: "sessionNotFound",
@@ -47,7 +47,7 @@ export default () => ({
             }
             const questionDb = sessionDb.questions.find(q => q.id === req.body.id);
             if (!questionDb) {
-                response.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Could not find test ID",
                     errorKeyword: "idNotFound",
@@ -67,7 +67,7 @@ export default () => ({
                     timeWait = timestampResume - timestampNow;
                 }
                 if (timeRemain <= 0 || timeWait >= 0) {
-                    response.requestError(rep, {
+                    response.requestError({
                         failed: true,
                         error: "No time left",
                         errorKeyword: "timeOver",

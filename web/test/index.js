@@ -22,7 +22,7 @@ export default (programs, tests) => ({
         const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
-            return response.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
+            return response.redirectToLogin(req.zoiaModulesConfig["edu"].routes.admin);
         }
         site.setAuth(auth);
         const testData = tests[`${req.params.programId}_${req.params.moduleId}_${req.params.testId}`];
@@ -167,7 +167,7 @@ export default (programs, tests) => ({
                     ...await site.getGlobals(),
                 }
             });
-            return response.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
             return Promise.reject(e);
         }

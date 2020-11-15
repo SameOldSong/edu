@@ -18,7 +18,7 @@ export default (programs) => ({
         const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
-            return response.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
+            return response.redirectToLogin(req.zoiaModulesConfig["edu"].routes.admin);
         }
         site.setAuth(auth);
         try {
@@ -46,7 +46,7 @@ export default (programs) => ({
                     ...await site.getGlobals(),
                 }
             });
-            return response.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
             return Promise.reject(e);
         }
