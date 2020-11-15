@@ -14,13 +14,16 @@ export default () => ({
     async handler(req, rep) {
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
+
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
-            rep.unauthorizedError(rep);
+            response.unauthorizedError(rep);
             return;
         }
         const testData = tests[`${req.body.program}_${req.body.module}_${req.body.test}`];
         if (!testData) {
-            rep.requestError(rep, {
+            response.requestError(rep, {
                 failed: true,
                 error: "Could not find test data",
                 errorKeyword: "testNotFound",
@@ -35,7 +38,7 @@ export default () => ({
                 _id: testSession
             });
             if (!sessionDb || !sessionDb.questions || !sessionDb.questions.length) {
-                rep.requestError(rep, {
+                response.requestError(rep, {
                     failed: true,
                     error: "Could not find test session",
                     errorKeyword: "sessionNotFound",
@@ -55,7 +58,7 @@ export default () => ({
                     timeWait = timestampResume - timestampNow;
                 }
                 if (timeRemain <= 0 || timeWait >= 0) {
-                    rep.requestError(rep, {
+                    response.requestError(rep, {
                         failed: true,
                         error: "No time left",
                         errorKeyword: "timeOver",
@@ -107,12 +110,12 @@ export default () => ({
             }, {
                 upsert: false,
             });
-            return rep.successJSON(rep, {
+            return response.successJSON(rep, {
                 result: testResult,
                 attempts: history.length
             });
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             return Promise.reject(e);
         }
     }
