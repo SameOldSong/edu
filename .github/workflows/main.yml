@@ -24,10 +24,10 @@ jobs:
       - name: create edu folder
         run: 
           mkdir edu
+      - name: copy all to edu folder
+        run: 
           ls | grep -v edu | xargs mv -t edu
-      - name: get Zoia
-        env:
-          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      - name: fetch Zoia
         run: |
           git clone https://github.com/xtremespb/zoia.git
           ls -l
