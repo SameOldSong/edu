@@ -24,7 +24,7 @@ jobs:
       - name: create edu folder
         run: |
           mkdir edu
-          mv !(edu) edu
+          ls | grep -v edu | xargs mv -t edu
       - name: get Zoia
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
