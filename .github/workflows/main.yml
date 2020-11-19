@@ -32,7 +32,9 @@ jobs:
           git clone https://github.com/xtremespb/zoia.git
           ls zoia/src/
           mv edu zoia/src/modules
+          echo "Zoia modules"
           ls zoia/src/modules/
+          echo "Edu"
           ls zoia/src/modules/edu
 
   
