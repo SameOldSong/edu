@@ -32,15 +32,8 @@ jobs:
           git clone https://github.com/xtremespb/zoia.git
           ls zoia/src/
           mv edu zoia/src/modules
-      - name : build zoia with edu
-        env:
-          Z3_MODULES_PUSH: edu
-        run: |
-          cd zoia
-          npm i
-          npm run config
-          npm run build-dev
-          npm run setup-all
+          ls zoia/src/modules/
+          ls zoia/src/modules/edu
 
   
      
