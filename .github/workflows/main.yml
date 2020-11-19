@@ -30,8 +30,8 @@ jobs:
       - name: fetch Zoia
         run: |
           git clone https://github.com/xtremespb/zoia.git
-          ls -l
-          mv edu /zoia/src/modules
+          ls zoia/src/
+          mv edu zoia/src/modules
       - name : build zoia with edu
         run: |
           export Z3_MODULES_PUSH=edu
