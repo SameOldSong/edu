@@ -33,8 +33,9 @@ jobs:
           ls zoia/src/
           mv edu zoia/src/modules
       - name : build zoia with edu
+        env:
+          Z3_MODULES_PUSH: edu
         run: |
-          export Z3_MODULES_PUSH=edu
           cd zoia
           npm i
           npm run config
