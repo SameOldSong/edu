@@ -22,13 +22,24 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: create edu folder
-        run: |
+        run: 
           mkdir edu
           ls | grep -v edu | xargs mv -t edu
       - name: get Zoia
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-        run: git clone https://github.com/xtremespb/zoia.git
-      - name : show dir
-        run: ls -l
+        run: |
+          git clone https://github.com/xtremespb/zoia.git
+          ls -l
+          mv edu /zoia/src/modules
+      - name : build zoia with edu
+        run: |
+          export Z3_MODULES_PUSH=edu
+          cd zoia
+          npm i
+          npm run config
+          npm run build-dev
+          npm run setup-all
+
+  
      
